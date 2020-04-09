@@ -17,11 +17,23 @@ app.get('/banking', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, (err,client) => {
         console.log('connected correctly to mongodb');
         let  db = client.db('banking');
-
         getDataFromDb(db, (documentsReturned)=>{
             res.json(documentsReturned)
         })
-
     });
-
 });
+// grabbing data from mongo db
+var getDataFromDb = (db, callback) => {
+    //specific collection
+    var collection = db.collection('accounts');
+    //If you put nothing inside the object below, you get everything
+    collection.find({}).toArray((err, docs)=>{
+        console.log('found the following records:');
+        callback(docs)
+    });
+};
+
+
+
+    // starts app running listening at defined port
+app.listen(port, () => console.log(`To do app listening at http://localhost:${port}`));
